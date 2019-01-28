@@ -76,6 +76,10 @@ static const char *calccmd[] = { "st", "-n", "calculator", "-e", "bcal", NULL };
 static const char *taskcmd[] = { "st", "-n", "taskwarrior", "-e", "tmux", "new-session", "-A", "-s", "tasks", "tasksh", NULL };
 static const char *developcmd[] = { "st", "-n", "develop", "-e", "tmux", "new-session", "-A", "-s", "develop", NULL };
 static const char *passcmd[] = { "passmenu", "--type", "-fn", dmenufont, "-nb", col_background, "-nf", col_foreground, "-sb", col_border, "-sf", col_foreground, "-p", "pass:", NULL };
+static const char *lockcmd[] = { "lock.sh", NULL };
+static const char *mpctogglecmd[] = { "mpc", "toggle", NULL };
+static const char *mpcnextcmd[] = { "mpc", "next", NULL };
+static const char *mpcprevcmd[] = { "mpc", "prev", NULL };
 
 #include <X11/XF86keysym.h>
 
@@ -87,7 +91,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_comma,  setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_period, setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
@@ -108,10 +111,14 @@ static Key keys[] = {
 	{ 0,                            XF86XK_Tools, spawn,       {.v = playercmd } },
 	{ 0,                            XF86XK_Calculator, spawn,  {.v = calccmd } },
 	{ 0,                            XF86XK_Search, spawn,      {.v = taskcmd } },
+	{ 0,                            XF86XK_AudioPlay, spawn,   {.v = mpctogglecmd } },
+	{ 0,                            XF86XK_AudioNext, spawn,   {.v = mpcnextcmd } },
+	{ 0,                            XF86XK_AudioPrev, spawn,   {.v = mpcprevcmd } },
 	{ MODKEY|ShiftMask,             XK_n, spawn,               {.v = rsscmd } },
 	{ MODKEY|ShiftMask,             XK_p, spawn,               {.v = weechatcmd } },
 	{ MODKEY|ShiftMask,             XK_d, spawn,               {.v = ddgrcmd } },
 	{ MODKEY|ShiftMask,             XK_o, spawn,               {.v = developcmd } },
+	{ MODKEY|ShiftMask,             XK_a, spawn,               {.v = lockcmd } },
 	{ MODKEY,                       XK_z, spawn,               {.v = passcmd } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
