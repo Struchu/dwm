@@ -31,7 +31,7 @@ static const Rule rules[] = {
     { "qutebrowser",   NULL,       NULL,       1 << 0,       0,           1 },
     { "google-chrome", NULL,       NULL,       1 << 0,       0,           1 },
     { NULL,            "develop",  NULL,       1 << 1,       0,           0 },
-    { NULL,            "ddgr",     NULL,       1 << 3,       0,           0 },
+    { NULL,            "ddgr",     NULL,       1 << 3,       0,           1 },
     { NULL,            "mail",     NULL,       1 << 4,       0,           1 },
     { NULL,            "rss",      NULL,       1 << 6,       0,           0 },
     { NULL,            "weechat",  NULL,       1 << 7,       0,           0 },
