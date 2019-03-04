@@ -80,6 +80,9 @@ static const char *lockcmd[] = { "lock.sh", NULL };
 static const char *mpctogglecmd[] = { "mpc", "toggle", NULL };
 static const char *mpcnextcmd[] = { "mpc", "next", NULL };
 static const char *mpcprevcmd[] = { "mpc", "prev", NULL };
+static const char *muteunmutecmd[] = { "amixer", "set", "Master", "toggle", NULL };
+static const char *volumeupcmd[] = { "amixer", "set", "Master", "10%+", NULL };
+static const char *volumedowncmd[] = { "amixer", "set", "Master", "10%-", NULL };
 
 #include <X11/XF86keysym.h>
 
@@ -115,6 +118,9 @@ static Key keys[] = {
     { 0,                            XF86XK_AudioPlay, spawn,   {.v = mpctogglecmd } },
     { 0,                            XF86XK_AudioNext, spawn,   {.v = mpcnextcmd } },
     { 0,                            XF86XK_AudioPrev, spawn,   {.v = mpcprevcmd } },
+    { 0,                            XF86XK_AudioRaiseVolume, spawn,   {.v = volumeupcmd } },
+    { 0,                            XF86XK_AudioLowerVolume, spawn,   {.v = volumedowncmd } },
+    { 0,                            XF86XK_AudioMute, spawn,   {.v = muteunmutecmd } },
     { MODKEY|ShiftMask,             XK_n, spawn,               {.v = rsscmd } },
     { MODKEY|ShiftMask,             XK_p, spawn,               {.v = weechatcmd } },
     { MODKEY|ShiftMask,             XK_d, spawn,               {.v = ddgrcmd } },
