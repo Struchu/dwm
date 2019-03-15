@@ -70,7 +70,7 @@ static const char *rsscmd[] = { "st", "-n", "rss", "-e", "newsboat", NULL };
 static const char *weechatcmd[] = { "st", "-n", "weechat", "-e", "tmux", "new-session", "-A", "-s", "chat", "weechat", NULL };
 static const char *playercmd[] = { "st", "-n", "player", "-e", "ncmpcpp", NULL };
 static const char *ddgrcmd[] = { "st", "-n", "ddgr", "-e", "tmux", "new-session", "-A", "-s", "duck", "ddgr --url-handler=w3m", NULL };
-static const char *filebrowsercmd[] = { "st", "-e", "nnn", NULL };
+static const char *filebrowsercmd[] = { "st", "-e", "vifm", NULL };
 static const char *calccmd[] = { "st", "-n", "calculator", "-e", "bcal", NULL };
 static const char *taskcmd[] = { "st", "-n", "taskwarrior", "-e", "tmux", "new-session", "-A", "-s", "tasks", "tasksh", NULL };
 static const char *developcmd[] = { "st", "-n", "develop", "-e", "tmux", "new-session", "-A", "-s", "develop", NULL };
