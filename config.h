@@ -28,7 +28,6 @@ static const Rule rules[] = {
      */
     /* class           instance    title       tags mask     isfloating   monitor */
     { "Firefox",       NULL,       NULL,       1 << 0,       0,           0 },
-    { "qutebrowser",   NULL,       NULL,       1 << 0,       0,           0 },
     { "google-chrome", NULL,       NULL,       1 << 0,       0,           0 },
     { NULL,            "develop",  NULL,       1 << 1,       0,           1 },
     { NULL,            "ddgr",     NULL,       1 << 3,       0,           0 },
@@ -59,7 +58,7 @@ static const Layout layouts[] = {
 { MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/usr/bin/zsh", "-c", cmd, NULL } }
+#define SHCMD(cmd) { .v = (const char*[]){ "/usr/bin/fish", "-c", cmd, NULL } }
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
