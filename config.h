@@ -27,8 +27,6 @@ static const Rule rules[] = {
      *	WM_NAME(STRING) = title
      */
     /* class           instance    title       tags mask     isfloating   monitor */
-    { "Firefox",       NULL,       NULL,       1 << 0,       0,           0 },
-    { "google-chrome", NULL,       NULL,       1 << 0,       0,           0 },
     { NULL,            "develop",  NULL,       1 << 1,       0,           1 },
     { NULL,            "ddgr",     NULL,       1 << 3,       0,           0 },
     { NULL,            "mail",     NULL,       1 << 4,       0,           0 },
@@ -82,6 +80,7 @@ static const char *mpcprevcmd[] = { "mpc", "prev", NULL };
 static const char *muteunmutecmd[] = { "amixer", "set", "Master", "toggle", NULL };
 static const char *volumeupcmd[] = { "amixer", "set", "Master", "10%+", NULL };
 static const char *volumedowncmd[] = { "amixer", "set", "Master", "10%-", NULL };
+static const char *opencalcmd[] = { "opencal", NULL };
 
 #include <X11/XF86keysym.h>
 
@@ -126,6 +125,7 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_o, spawn,               {.v = developcmd } },
     { MODKEY|ShiftMask,             XK_a, spawn,               {.v = lockcmd } },
     { MODKEY,                       XK_z, spawn,               {.v = passcmd } },
+    { MODKEY,                       XK_c, spawn,               {.v = opencalcmd } },
     TAGKEYS(                        XK_1,                      0)
         TAGKEYS(                        XK_2,                      1)
         TAGKEYS(                        XK_3,                      2)
