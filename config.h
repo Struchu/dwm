@@ -5,8 +5,8 @@ static const unsigned int borderpx  = 3;       /* border pixel of windows */
 static const unsigned int snap      = 32;        /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "Menlo for Powerline:size=10", "Font Awesome:size=10" };
-static const char dmenufont[]       = "Menlo for Powerline:size=10";
+static const char *fonts[]          = { "Inconsolata:pixelsize=19:anitalias=true:autohint=true" };
+static const char dmenufont[]       = "Inconsolata:pixelsize=19:anitalias=true:autohint=true";
 static const char col_background[]  = "#fdf6e3";
 static const char col_foreground[]  = "#657b83";
 static const char col_border[]      = "#eee8d5";
@@ -19,7 +19,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
+static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
     /* xprop(1):
@@ -27,11 +27,6 @@ static const Rule rules[] = {
      *	WM_NAME(STRING) = title
      */
     /* class           instance    title       tags mask     isfloating   monitor */
-    { NULL,            "develop",  NULL,       1 << 1,       0,           1 },
-    { NULL,            "ddgr",     NULL,       1 << 3,       0,           0 },
-    { NULL,            "mail",     NULL,       1 << 4,       0,           0 },
-    { NULL,            "rss",      NULL,       1 << 6,       0,           1 },
-    { NULL,            "weechat",  NULL,       1 << 7,       0,           1 },
     { NULL,            "player",   NULL,       1 << 8,       0,           1 },
 };
 
@@ -56,36 +51,37 @@ static const Layout layouts[] = {
 { MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/usr/bin/fish", "-c", cmd, NULL } }
+#define SHCMD(cmd) { .v = (const char*[]){ "/bin/zsh", "-c", cmd, NULL } }
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_background, "-nf", col_foreground, "-sb", col_border, "-sf", col_foreground, "-p", "run:", NULL };
 static const char *termcmd[]  = { "st", "-e", "tmux", NULL };
+static const char *baretermcmd[]  = { "st", NULL };
 
 static const char *mailcmd[] = { "st", "-n", "mail", "-e", "neomutt", NULL };
 static const char *rsscmd[] = { "st", "-n", "rss", "-e", "newsboat", NULL };
 static const char *weechatcmd[] = { "st", "-n", "weechat", "-e", "tmux", "new-session", "-A", "-s", "chat", "weechat", NULL };
 static const char *playercmd[] = { "st", "-n", "player", "-e", "ncmpcpp", NULL };
-static const char *ddgrcmd[] = { "st", "-n", "ddgr", "-e", "tmux", "new-session", "-A", "-s", "duck", "ddgr --url-handler=w3m", NULL };
-static const char *filebrowsercmd[] = { "st", "-e", "vifm", NULL };
+static const char *ddgrcmd[] = { "st", "-e", "tmux", "new-session", "ddgr --url-handler=l", NULL };
+static const char *bukucmd[] = { "st", "-e", "tmux", "new-session", "buku", NULL };
 static const char *calccmd[] = { "st", "-n", "calculator", "-e", "bcal", NULL };
-static const char *taskcmd[] = { "st", "-n", "taskwarrior", "-e", "tmux", "new-session", "-A", "-s", "tasks", "tasksh", NULL };
-static const char *developcmd[] = { "st", "-n", "develop", "-e", "tmux", "new-session", "-A", "-s", "develop", NULL };
 static const char *passcmd[] = { "passmenu", "--type", "-fn", dmenufont, "-nb", col_background, "-nf", col_foreground, "-sb", col_border, "-sf", col_foreground, "-p", "pass:", NULL };
-static const char *lockcmd[] = { "lock.sh", NULL };
+static const char *lockcmd[] = { "lock", NULL };
 static const char *mpctogglecmd[] = { "mpc", "toggle", NULL };
 static const char *mpcnextcmd[] = { "mpc", "next", NULL };
 static const char *mpcprevcmd[] = { "mpc", "prev", NULL };
 static const char *muteunmutecmd[] = { "amixer", "set", "Master", "toggle", NULL };
 static const char *volumeupcmd[] = { "amixer", "set", "Master", "10%+", NULL };
 static const char *volumedowncmd[] = { "amixer", "set", "Master", "10%-", NULL };
+static const char *powermenucmd[] = { "power_menu", NULL };
 
 #include <X11/XF86keysym.h>
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
     { MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
+    { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = baretermcmd } },
     { MODKEY,                       XK_b,      togglebar,      {0} },
     { MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
     { MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -93,11 +89,11 @@ static Key keys[] = {
     { MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
     { MODKEY,                       XK_period, setmfact,       {.f = +0.05} },
     { MODKEY,                       XK_comma, setmfact,        {.f = -0.05} },
-    { MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
+    { MODKEY|ShiftMask,             XK_f, zoom,           {0} },
     { MODKEY,                       XK_Tab,    view,           {0} },
     { MODKEY,                       XK_q,      killclient,     {0} },
     { MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-    { MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+    { MODKEY,                       XK_g,      setlayout,      {.v = &layouts[1]} },
     { MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
     { MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
     { MODKEY,                       XK_0,      view,           {.ui = ~0 } },
@@ -108,10 +104,9 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_l,      tagmon,         {.i = +1 } },
     { 0,                            XF86XK_MyComputer, spawn,  {.v = termcmd } },
     { 0,                            XF86XK_Mail, spawn,        {.v = mailcmd } },
-    { 0,                            XF86XK_HomePage, spawn,    {.v = filebrowsercmd } },
+    { MODKEY|ShiftMask,             XK_m, spawn,               {.v = mailcmd } },
     { 0,                            XF86XK_Tools, spawn,       {.v = playercmd } },
     { 0,                            XF86XK_Calculator, spawn,  {.v = calccmd } },
-    { 0,                            XF86XK_Search, spawn,      {.v = taskcmd } },
     { 0,                            XF86XK_AudioPlay, spawn,   {.v = mpctogglecmd } },
     { 0,                            XF86XK_AudioNext, spawn,   {.v = mpcnextcmd } },
     { 0,                            XF86XK_AudioPrev, spawn,   {.v = mpcprevcmd } },
@@ -121,19 +116,20 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_n, spawn,               {.v = rsscmd } },
     { MODKEY|ShiftMask,             XK_p, spawn,               {.v = weechatcmd } },
     { MODKEY|ShiftMask,             XK_d, spawn,               {.v = ddgrcmd } },
-    { MODKEY|ShiftMask,             XK_o, spawn,               {.v = developcmd } },
+    { MODKEY|ShiftMask,             XK_b, spawn,               {.v = bukucmd } },
     { MODKEY|ShiftMask,             XK_a, spawn,               {.v = lockcmd } },
     { MODKEY,                       XK_z, spawn,               {.v = passcmd } },
     TAGKEYS(                        XK_1,                      0)
-        TAGKEYS(                        XK_2,                      1)
-        TAGKEYS(                        XK_3,                      2)
-        TAGKEYS(                        XK_4,                      3)
-        TAGKEYS(                        XK_5,                      4)
-        TAGKEYS(                        XK_6,                      5)
-        TAGKEYS(                        XK_7,                      6)
-        TAGKEYS(                        XK_8,                      7)
-        TAGKEYS(                        XK_9,                      8)
-        { MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+    TAGKEYS(                        XK_2,                      1)
+    TAGKEYS(                        XK_3,                      2)
+    TAGKEYS(                        XK_4,                      3)
+    TAGKEYS(                        XK_5,                      4)
+    TAGKEYS(                        XK_6,                      5)
+    TAGKEYS(                        XK_7,                      6)
+    TAGKEYS(                        XK_8,                      7)
+    TAGKEYS(                        XK_9,                      8)
+    { MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+    { MODKEY|ShiftMask,             XK_w,      spawn,          {.v = powermenucmd} },
 };
 
 /* button definitions */
