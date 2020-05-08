@@ -56,14 +56,14 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_background, "-nf", col_foreground, "-sb", col_border, "-sf", col_foreground, "-p", "run:", NULL };
-static const char *termcmd[]  = { "st", "-e", "tmux", NULL };
-static const char *baretermcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "st", NULL };
+static const char *tmuxcmd[]  = { "tmux_session", NULL };
 
 static const char *mailcmd[] = { "st", "-n", "mail", "-e", "neomutt", NULL };
 static const char *rsscmd[] = { "st", "-n", "rss", "-e", "newsboat", NULL };
 static const char *weechatcmd[] = { "st", "-n", "weechat", "-e", "tmux", "new-session", "-A", "-s", "chat", "weechat", NULL };
 static const char *playercmd[] = { "st", "-n", "player", "-e", "ncmpcpp", NULL };
-static const char *ddgrcmd[] = { "st", "-e", "tmux", "new-session", "ddgr --url-handler=l", NULL };
+static const char *ddgrcmd[] = { "st", "-e", "tmux", "new-session", "ddgr --url-handler browser", NULL };
 static const char *bukucmd[] = { "st", "-e", "tmux", "new-session", "buku", NULL };
 static const char *calccmd[] = { "st", "-n", "calculator", "-e", "bcal", NULL };
 static const char *passcmd[] = { "passmenu", "--type", "-fn", dmenufont, "-nb", col_background, "-nf", col_foreground, "-sb", col_border, "-sf", col_foreground, "-p", "pass:", NULL };
@@ -81,7 +81,7 @@ static const char *powermenucmd[] = { "power_menu", NULL };
 static Key keys[] = {
     /* modifier                     key        function        argument */
     { MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-    { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = baretermcmd } },
+    { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = tmuxcmd } },
     { MODKEY,                       XK_b,      togglebar,      {0} },
     { MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
     { MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
