@@ -45,10 +45,10 @@ static const Layout layouts[] = {
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
-{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+{ 0,    MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+{ 0,    MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+{ 0,    MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
+{ 0,    MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/zsh", "-c", cmd, NULL } }
@@ -57,7 +57,8 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_background, "-nf", col_foreground, "-sb", col_border, "-sf", col_foreground, "-p", "run:", NULL };
 static const char *termcmd[]  = { "st", NULL };
-static const char *tmuxcmd[]  = { "tmux_session", NULL };
+static const char *tmuxcmd[]  = { "st", "-e", "tmux", NULL };
+static const char *tmuxsessioncmd[]  = { "tmux_session", NULL };
 
 static const char *mailcmd[] = { "st", "-n", "mail", "-e", "neomutt", NULL };
 static const char *rsscmd[] = { "st", "-n", "rss", "-e", "newsboat", NULL };
@@ -76,49 +77,53 @@ static const char *volumeupcmd[] = { "amixer", "set", "Master", "10%+", NULL };
 static const char *volumedowncmd[] = { "amixer", "set", "Master", "10%-", NULL };
 static const char *powermenucmd[] = { "power_menu", NULL };
 
+#define MULTIKEY_THRESHOLD_MS_PRESS 200
+#define MULTIKEY_THRESHOLD_MS_HOLD 700
+
 #include <X11/XF86keysym.h>
 
 static Key keys[] = {
-    /* modifier                     key        function        argument */
-    { MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-    { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = tmuxcmd } },
-    { MODKEY,                       XK_b,      togglebar,      {0} },
-    { MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-    { MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-    { MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-    { MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
-    { MODKEY,                       XK_period, setmfact,       {.f = +0.05} },
-    { MODKEY,                       XK_comma, setmfact,        {.f = -0.05} },
-    { MODKEY|ShiftMask,             XK_f, zoom,           {0} },
-    { MODKEY,                       XK_Tab,    view,           {0} },
-    { MODKEY,                       XK_q,      killclient,     {0} },
-    { MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-    { MODKEY,                       XK_g,      setlayout,      {.v = &layouts[1]} },
-    { MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-    { MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
-    { MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-    { MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-    { MODKEY,                       XK_h,      focusmon,       {.i = -1 } },
-    { MODKEY,                       XK_l,      focusmon,       {.i = +1 } },
-    { MODKEY|ShiftMask,             XK_h,      tagmon,         {.i = -1 } },
-    { MODKEY|ShiftMask,             XK_l,      tagmon,         {.i = +1 } },
-    { 0,                            XF86XK_MyComputer, spawn,  {.v = termcmd } },
-    { 0,                            XF86XK_Mail, spawn,        {.v = mailcmd } },
-    { MODKEY|ShiftMask,             XK_m, spawn,               {.v = mailcmd } },
-    { 0,                            XF86XK_Tools, spawn,       {.v = playercmd } },
-    { 0,                            XF86XK_Calculator, spawn,  {.v = calccmd } },
-    { 0,                            XF86XK_AudioPlay, spawn,   {.v = mpctogglecmd } },
-    { 0,                            XF86XK_AudioNext, spawn,   {.v = mpcnextcmd } },
-    { 0,                            XF86XK_AudioPrev, spawn,   {.v = mpcprevcmd } },
-    { 0,                            XF86XK_AudioRaiseVolume, spawn,   {.v = volumeupcmd } },
-    { 0,                            XF86XK_AudioLowerVolume, spawn,   {.v = volumedowncmd } },
-    { 0,                            XF86XK_AudioMute, spawn,   {.v = muteunmutecmd } },
-    { MODKEY|ShiftMask,             XK_n, spawn,               {.v = rsscmd } },
-    { MODKEY|ShiftMask,             XK_p, spawn,               {.v = weechatcmd } },
-    { MODKEY|ShiftMask,             XK_d, spawn,               {.v = ddgrcmd } },
-    { MODKEY|ShiftMask,             XK_b, spawn,               {.v = bukucmd } },
-    { MODKEY|ShiftMask,             XK_a, spawn,               {.v = lockcmd } },
-    { MODKEY,                       XK_z, spawn,               {.v = passcmd } },
+    /* repeats  modifier                     key        function        argument */
+    { 0,        MODKEY,                       XK_Return, spawn,          {.v = tmuxcmd } },
+    { 1,        MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+    { 2,        MODKEY|ShiftMask,             XK_Return, spawn,          {.v = tmuxsessioncmd } },
+    { 0,        MODKEY,                       XK_b,      togglebar,      {0} },
+    { 0,        MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
+    { 0,        MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+    { 0,        MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
+    { 0,        MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+    { 0,        MODKEY,                       XK_period, setmfact,       {.f = +0.05} },
+    { 0,        MODKEY,                       XK_comma, setmfact,        {.f = -0.05} },
+    { 0,        MODKEY|ShiftMask,             XK_f, zoom,           {0} },
+    { 0,        MODKEY,                       XK_Tab,    view,           {0} },
+    { 0,        MODKEY,                       XK_q,      killclient,     {0} },
+    { 0,        MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+    { 0,        MODKEY,                       XK_g,      setlayout,      {.v = &layouts[1]} },
+    { 0,        MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+    { 0,        MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
+    { 0,        MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+    { 0,        MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+    { 0,        MODKEY,                       XK_h,      focusmon,       {.i = -1 } },
+    { 0,        MODKEY,                       XK_l,      focusmon,       {.i = +1 } },
+    { 0,        MODKEY|ShiftMask,             XK_h,      tagmon,         {.i = -1 } },
+    { 0,        MODKEY|ShiftMask,             XK_l,      tagmon,         {.i = +1 } },
+    { 0,        0,                            XF86XK_MyComputer, spawn,  {.v = termcmd } },
+    { 0,        0,                            XF86XK_Mail, spawn,        {.v = mailcmd } },
+    { 0,        MODKEY|ShiftMask,             XK_m, spawn,               {.v = mailcmd } },
+    { 0,        0,                            XF86XK_Tools, spawn,       {.v = playercmd } },
+    { 0,        0,                            XF86XK_Calculator, spawn,  {.v = calccmd } },
+    { 0,        0,                            XF86XK_AudioPlay, spawn,   {.v = mpctogglecmd } },
+    { 0,        0,                            XF86XK_AudioNext, spawn,   {.v = mpcnextcmd } },
+    { 0,        0,                            XF86XK_AudioPrev, spawn,   {.v = mpcprevcmd } },
+    { 0,        0,                            XF86XK_AudioRaiseVolume, spawn,   {.v = volumeupcmd } },
+    { 0,        0,                            XF86XK_AudioLowerVolume, spawn,   {.v = volumedowncmd } },
+    { 0,        0,                            XF86XK_AudioMute, spawn,   {.v = muteunmutecmd } },
+    { 0,        MODKEY|ShiftMask,             XK_n, spawn,               {.v = rsscmd } },
+    { 0,        MODKEY|ShiftMask,             XK_p, spawn,               {.v = weechatcmd } },
+    { 0,        MODKEY|ShiftMask,             XK_d, spawn,               {.v = ddgrcmd } },
+    { 0,        MODKEY|ShiftMask,             XK_b, spawn,               {.v = bukucmd } },
+    { 0,        MODKEY|ShiftMask,             XK_a, spawn,               {.v = lockcmd } },
+    { 0,        MODKEY,                       XK_z, spawn,               {.v = passcmd } },
     TAGKEYS(                        XK_1,                      0)
     TAGKEYS(                        XK_2,                      1)
     TAGKEYS(                        XK_3,                      2)
@@ -128,8 +133,8 @@ static Key keys[] = {
     TAGKEYS(                        XK_7,                      6)
     TAGKEYS(                        XK_8,                      7)
     TAGKEYS(                        XK_9,                      8)
-    { MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-    { MODKEY|ShiftMask,             XK_w,      spawn,          {.v = powermenucmd} },
+    { 2,        MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+    { 1,        MODKEY|ShiftMask,             XK_q,      spawn,          {.v = powermenucmd} },
 };
 
 /* button definitions */
