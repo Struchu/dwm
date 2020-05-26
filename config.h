@@ -40,7 +40,6 @@ static const Layout layouts[] = {
     { "",      tile },    /* first entry is default */
     { "[D]",      deck  },
     { "",      monocle },
-    { NULL,       NULL },
 };
 
 /* key definitions */
@@ -98,8 +97,9 @@ static Key keys[] = {
     { 0,        MODKEY|ShiftMask,             XK_f, zoom,           {0} },
     { 0,        MODKEY,                       XK_Tab,    view,           {0} },
     { 0,        MODKEY,                       XK_q,      killclient,     {0} },
-    { 0,        MODKEY,                       XK_t,      cyclelayout,    {.i = +1} },
-    { 0,        MODKEY|ShiftMask,             XK_t,      cyclelayout,    {.i = -1} },
+    { 0,        MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+    { 0,        MODKEY,                       XK_r,      setlayout,      {.v = &layouts[1]} },
+    { 0,        MODKEY,                       XK_y,      setlayout,      {.v = &layouts[2]} },
     { 0,        MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
     { 0,        MODKEY,                       XK_0,      view,           {.ui = ~0 } },
     { 0,        MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
