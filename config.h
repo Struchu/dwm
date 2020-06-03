@@ -72,9 +72,9 @@ static const char *lockcmd[] = { "lock", NULL };
 static const char *mpctogglecmd[] = { "mpc", "toggle", NULL };
 static const char *mpcnextcmd[] = { "mpc", "next", NULL };
 static const char *mpcprevcmd[] = { "mpc", "prev", NULL };
-static const char *muteunmutecmd[] = { "amixer", "set", "Master", "toggle", NULL };
-static const char *volumeupcmd[] = { "amixer", "set", "Master", "10%+", NULL };
-static const char *volumedowncmd[] = { "amixer", "set", "Master", "10%-", NULL };
+static const char *muteunmutecmd[] = { "adjust_volume", "toggle", NULL };
+static const char *volumeupcmd[] = { "adjust_volume", "10%+", NULL };
+static const char *volumedowncmd[] = { "adjust_volume", "10%-", NULL };
 static const char *powermenucmd[] = { "power_menu", NULL };
 
 #define MULTIKEY_THRESHOLD_MS_PRESS 200
