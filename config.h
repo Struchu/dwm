@@ -75,6 +75,9 @@ static const char *mpcprevcmd[] = { "mpc", "prev", NULL };
 static const char *muteunmutecmd[] = { "adjust_volume", "toggle", NULL };
 static const char *volumeupcmd[] = { "adjust_volume", "10%+", NULL };
 static const char *volumedowncmd[] = { "adjust_volume", "10%-", NULL };
+static const char *togglemicrophone[] = { "amixer", "-c", "0", "set", "Capture", "toggle", NULL };
+static const char *lightup[] = { "doas", "xbacklight", "-inc", "10", NULL };
+static const char *lightdown[] = { "doas", "xbacklight", "-dec", "10", NULL };
 static const char *powermenucmd[] = { "power_menu", NULL };
 
 #define MULTIKEY_THRESHOLD_MS_PRESS 200
@@ -118,6 +121,9 @@ static Key keys[] = {
     { 0,        0,                            XF86XK_AudioRaiseVolume, spawn,   {.v = volumeupcmd } },
     { 0,        0,                            XF86XK_AudioLowerVolume, spawn,   {.v = volumedowncmd } },
     { 0,        0,                            XF86XK_AudioMute, spawn,   {.v = muteunmutecmd } },
+    { 0,        0,                            XF86XK_MonBrightnessDown, spawn,  {.v = lightdown} },
+    { 0,        0,                            XF86XK_MonBrightnessUp, spawn,  {.v = lightup} },
+    { 0,        0,                            XF86XK_AudioMicMute, spawn,  {.v = togglemicrophone} },
     { 0,        MODKEY|ShiftMask,             XK_n, spawn,               {.v = rsscmd } },
     { 0,        MODKEY|ShiftMask,             XK_p, spawn,               {.v = weechatcmd } },
     { 0,        MODKEY|ShiftMask,             XK_d, spawn,               {.v = searchcmd } },
