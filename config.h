@@ -80,6 +80,7 @@ static const char *lightup[] = { "doas", "xbacklight", "-inc", "10", NULL };
 static const char *lightdown[] = { "doas", "xbacklight", "-dec", "10", NULL };
 static const char *detectmonitors[] = { "detect_monitors", NULL };
 static const char *powermenucmd[] = { "power_menu", NULL };
+static const char *sytcmd[] = { "syt", NULL };
 
 #define MULTIKEY_THRESHOLD_MS_PRESS 200
 #define MULTIKEY_THRESHOLD_MS_HOLD 700
@@ -135,6 +136,7 @@ static Key keys[] = {
     { 0,        MODKEY|ShiftMask,             XK_b, spawn,               {.v = bukucmd } },
     { 0,        MODKEY|ShiftMask,             XK_a, spawn,               {.v = lockcmd } },
     { 0,        MODKEY,                       XK_z, spawn,               {.v = passcmd } },
+    { 0,        MODKEY|ShiftMask,             XK_y, spawn,               {.v = sytcmd } },
     TAGKEYS(                        XK_1,                      0)
     TAGKEYS(                        XK_2,                      1)
     TAGKEYS(                        XK_3,                      2)
